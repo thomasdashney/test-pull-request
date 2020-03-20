@@ -4,15 +4,17 @@ name: rc_to_dev_pr
 
 on:
   push:
-    branches: [ release/* ]
+    branches: [release/*]
 
 jobs:
   pull-request:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: pull-request
-      uses: repo-sync/pull-request@v2
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        destination_branch: "develop"
+      - uses: actions/checkout@v1
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          destination_branch: "develop"
+          pr_title: "Pulling ${{ github.ref }} into develop"
+          pr_body: "*This PR was automatically created* when new commits were added to RC."
