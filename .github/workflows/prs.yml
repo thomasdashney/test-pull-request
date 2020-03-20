@@ -1,0 +1,18 @@
+# When release/* is updated, automatically creates a PR to merge changes back into dev
+
+name: rc_to_dev_pr
+
+on:
+  push:
+    branches: [ release/* ]
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: pull-request
+      uses: repo-sync/pull-request@v2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        destination_branch: "develop"
