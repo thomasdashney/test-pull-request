@@ -17,8 +17,12 @@ jobs:
         run: |
           git fetch origin ${{ github.sha }}:${{ github.sha }}
           git reset --hard ${{ github.sha }}
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Create Pull Request from RC -> develop
         uses: peter-evans/create-pull-request@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${GITHUB_REF#refs/heads/}-to-develop
+          branch: ${{ steps.extract_branch.outputs.branch }}-to-develop
