@@ -13,8 +13,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: develop
+      - name: Reset promotion branch
+        run: |
+          git fetch origin ${{ github.sha }}:${{ github.sha }}
+          git reset --hard ${{ github.sha }}
       - name: Create Pull Request from RC -> develop
         uses: peter-evans/create-pull-request@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: develop
+          branch: merge-rc-to-dev
