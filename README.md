@@ -2,4 +2,5 @@ Hello world
 
 Some change
 Conflicts ...
-update
+Random conflicts
+Test 12345
