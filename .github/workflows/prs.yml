@@ -1,4 +1,4 @@
-name: Pull release/* into develop
+name: Automatically create PRs to merge master/RC changes downstream
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  merge_master_changes:
+  master_changes:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +34,7 @@ jobs:
           branch: merge-master-to-rc
           title: "Merge master changes into RC"
 
-  merge_rc_changes:
+  rc_changes:
     if: contains(github.ref,'release/')
     runs-on: ubuntu-latest
     steps:
