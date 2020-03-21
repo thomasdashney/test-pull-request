@@ -8,7 +8,7 @@ on:
 
 jobs:
   master_to_rc:
-    if: github.ref='refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Extract release branch name
