@@ -17,7 +17,7 @@ jobs:
         id: extract_rc_branch
         run: |
           git fetch origin
-          echo "##[set-output name=branch;]$(git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*origin\///'))
+          echo "##[set-output name=branch;]$(git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*origin\///')"
       - name: Checkout RC
         run: |
           git checkout ${{ steps.extract_rc_branch.outputs.branch }}
