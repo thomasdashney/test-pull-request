@@ -9,15 +9,13 @@ jobs:
   pr_rc_to_dev:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Develop
         uses: actions/checkout@v2
-        with:
-          ref: develop
-      - name: Reset promotion branch
+      - name: Reset To RC branch
         run: |
           git fetch origin ${{ github.sha }}:${{ github.sha }}
           git reset --hard ${{ github.sha }}
-      - name: Extract branch name
+      - name: Extract Release Branch Name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
@@ -26,3 +24,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ steps.extract_branch.outputs.branch }}-to-develop
+          base: develop
