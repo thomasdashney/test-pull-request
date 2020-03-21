@@ -26,3 +26,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ steps.extract_branch.outputs.branch }}-to-develop
+          title: "Merge RC changes into develop"
