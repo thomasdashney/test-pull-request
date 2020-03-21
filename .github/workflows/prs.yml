@@ -11,14 +11,12 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Develop
+        uses: actions/checkout@v2
       - name: Extract release branch name
         run: |
           git fetch origin
           git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*//'
-      # - name: Checkout Develop
-      #   uses: actions/checkout@v2
-      #   with:
-      #     ref: develop
       # - name: Reset To RC branch
       #   run: |
       #     git fetch origin ${{ github.sha }}:${{ github.sha }}
