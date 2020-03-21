@@ -31,8 +31,8 @@ jobs:
         uses: peter-evans/create-pull-request@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: merge-master-to-rc
-          title: "Merge master changes into RC"
+          branch: merge-master-to-${{ steps.extract_dest_branch.outputs.branch }}
+          title: Merge master changes into ${{ steps.extract_dest_branch.outputs.branch }}
 
   rc_changes:
     if: contains(github.ref,'release/')
