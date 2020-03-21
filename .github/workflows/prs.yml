@@ -7,17 +7,19 @@ on:
       - master
 
 jobs:
-  master_to_rc:
+  merge_master_changes:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Extract rc branch name
+      - name: Get destination branch name (release, or develop if no release exists)
         id: extract_rc_branch
         run: |
           git fetch origin
-          echo "##[set-output name=branch;]$(git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*origin\///')"
+          rc_branch=$(git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*origin\///')"
+          [ -z "$rc_branch" ] && dest_branch='develop' || dest_branch=$rc_branch
+          echo "##[set-output name=branch;]$(echo $rc_branch)"
       - name: Checkout RC
         run: |
           git checkout ${{ steps.extract_rc_branch.outputs.branch }}
@@ -32,7 +34,7 @@ jobs:
           branch: merge-master-to-rc
           title: "Merge master changes into RC"
 
-  rc_to_dev:
+  merge_rc_changes:
     if: contains(github.ref,'release/')
     runs-on: ubuntu-latest
     steps:
