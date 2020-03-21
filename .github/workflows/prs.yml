@@ -4,9 +4,38 @@ on:
   push:
     branches:
       - release/*
+      - master
 
 jobs:
-  pr_rc_to_dev:
+  master_to_rc:
+    if: github.ref = 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract release branch name
+        run: |
+          git fetch origin
+          git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*//'
+      # - name: Checkout Develop
+      #   uses: actions/checkout@v2
+      #   with:
+      #     ref: develop
+      # - name: Reset To RC branch
+      #   run: |
+      #     git fetch origin ${{ github.sha }}:${{ github.sha }}
+      #     git reset --hard ${{ github.sha }}
+      # - name: Reset To RC branch
+      #   run: |
+      #     git fetch origin ${{ github.sha }}:${{ github.sha }}
+      #     git reset --hard ${{ github.sha }}
+      # - name: Create Pull Request from master -> RC
+      #   uses: peter-evans/create-pull-request@v2
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: merge-master-to-rc
+      #     title: "Merge master changes into RC"
+
+  rc_to_dev:
+    if: contains(github.ref), 'release/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Develop
@@ -25,5 +54,5 @@ jobs:
         uses: peter-evans/create-pull-request@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.extract_branch.outputs.branch }}-to-develop
+          branch: merge-${{ steps.extract_branch.outputs.branch }}-to-develop
           title: "Merge RC changes into develop"
