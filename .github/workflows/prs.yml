@@ -35,7 +35,7 @@ jobs:
       #     title: "Merge master changes into RC"
 
   rc_to_dev:
-    if: contains(github.ref), 'release/')
+    if: contains(github.ref,'release/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Develop
