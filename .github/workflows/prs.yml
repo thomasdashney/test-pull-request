@@ -19,8 +19,8 @@ jobs:
           git fetch origin
           rc_branch=$(git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*origin\///')
           [ -z "$rc_branch" ] && dest_branch='develop' || dest_branch=$rc_branch
-          echo "##[set-output name=branch;]$(echo $dest_branch_branch)"
-      - name: Checkout RC
+          echo "##[set-output name=branch;]$(echo $dest_branch)"
+      - name: Checkout destination branch
         run: |
           git checkout ${{ steps.extract_dest_branch.outputs.branch }}
       - name: Reset to master branch
