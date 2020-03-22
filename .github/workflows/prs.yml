@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  master_changes:
+  create_master_pr:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
@@ -17,7 +17,9 @@ jobs:
         id: extract_dest_branch
         run: |
           git fetch origin
+          # get (latest) RC branch name
           rc_branch=$(git branch -l -r 'origin/release/*' --sort=-committerdate | head -n 1 | sed -e 's/^[ \t]*origin\///')
+          # assign destination branch to either RC or develop if RC does not exist
           [ -z "$rc_branch" ] && dest_branch='develop' || dest_branch=$rc_branch
           echo "##[set-output name=branch;]$(echo $dest_branch)"
       - name: Checkout destination branch
@@ -27,14 +29,14 @@ jobs:
         run: |
           git fetch origin master:master
           git reset --hard master
-      - name: Create Pull Request from master -> RC
+      - name: Create Pull Request from master -> destination
         uses: peter-evans/create-pull-request@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: merge-master-to-${{ steps.extract_dest_branch.outputs.branch }}
           title: Merge master changes into ${{ steps.extract_dest_branch.outputs.branch }}
 
-  rc_changes:
+  create_rc_pr:
     if: contains(github.ref,'release/')
     runs-on: ubuntu-latest
     steps:
